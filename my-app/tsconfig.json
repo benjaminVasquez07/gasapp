@@ -29,7 +29,8 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts",
-    "app/components/CopyToClipboardButton.js"
+    "app/components/CopyToClipboardButton.js",
+    "app/components/app.jsx"
   ],
   "exclude": ["node_modules"]
 }

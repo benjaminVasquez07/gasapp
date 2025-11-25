@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Head from "next/head";
+import Link from "next/link";
 
 export default function Home() {
   const [copied, setCopied] = useState(false);
@@ -12,7 +13,6 @@ export default function Home() {
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error("Error al copiar: ", err);
-      // Fallback para navegadores más antiguos
       const textArea = document.createElement("textarea");
       textArea.value = window.location.href;
       document.body.appendChild(textArea);
@@ -90,9 +90,11 @@ export default function Home() {
 
             {/* CTA Button */}
             <div className="flex justify-center">
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-colors duration-200">
-                Solicitar Cotización Instantánea
-              </button>
+              <Link href="/chat">
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-colors duration-200">
+                  Solicitar Cotización Instantánea
+                </button>
+              </Link>
             </div>
           </div>
         </section>
@@ -116,35 +118,6 @@ export default function Home() {
                   <p className="text-gray-600">
                     Responde preguntas simples sobre tu proyecto y recibe un
                     presupuesto preciso al instante.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Services Section */}
-        <section className="bg-blue-50 py-16">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <h3 className="text-3xl font-bold text-gray-900 mb-8">
-                Servicios Profesionales
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-white p-6 rounded-lg shadow-sm">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-2">
-                    Instalaciones
-                  </h4>
-                  <p className="text-gray-600">
-                    Instalación segura de artefactos a gas
-                  </p>
-                </div>
-                <div className="bg-white p-6 rounded-lg shadow-sm">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-2">
-                    Reparaciones
-                  </h4>
-                  <p className="text-gray-600">
-                    Mantenimiento y reparación de instalaciones
                   </p>
                 </div>
               </div>
