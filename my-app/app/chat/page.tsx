@@ -11,11 +11,41 @@ interface Message {
   timestamp: Date;
 }
 
+// Función simple para generar la respuesta del bot
+const getBotResponse = (userText: string): string => {
+  const lowerText = userText.toLowerCase();
+
+  if (
+    lowerText.includes("hola") ||
+    lowerText.includes("buenas") ||
+    lowerText.includes("buenos dias")
+  ) {
+    return "¡Hola! Para ayudarte mejor y coordinar el servicio, ¿podrías decirme **qué tipo de servicio necesitas**? (Ej: Revisión de artefactos, instalación, prueba de hermeticidad).";
+  } else if (
+    lowerText.includes("revision") ||
+    lowerText.includes("instalacion") ||
+    lowerText.includes("artefacto")
+  ) {
+    return "¿En qué zona o barrio estás ubicado/a? Así te asignamos el gasista matriculado más cercano.";
+  } else if (
+    lowerText.includes("presupuesto") ||
+    lowerText.includes("cuanto")
+  ) {
+    return "Para darte un presupuesto aproximado, necesitamos saber la dirección exacta del trabajo y una breve descripción. ¿Me la podrías enviar?";
+  } else if (lowerText.includes("gracias")) {
+    return "¡De nada! Si tienes otra consulta, no dudes en escribir. En breve un gasista se pondrá en contacto contigo.";
+  }
+
+  // Respuesta por defecto si no coincide con nada
+  return "Gracias por tu mensaje. El gasista matriculado ha recibido tu consulta y te responderá personalmente a este chat en unos minutos para coordinar el servicio.";
+};
+
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Mensaje inicial del bot
   useEffect(() => {
     setMessages([
       {
@@ -31,23 +61,41 @@ export default function Chat() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  // Desplazarse al final cuando se añaden mensajes
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputMessage.trim()) return;
+    const text = inputMessage.trim();
+    if (!text) return;
 
     const userMessage: Message = {
       id: messages.length + 1,
-      text: inputMessage,
+      text: text,
       sender: "user",
       timestamp: new Date(),
     };
 
+    // 1. Añadir el mensaje del usuario
     setMessages((prev) => [...prev, userMessage]);
     setInputMessage("");
+
+    // 2. Generar y programar la respuesta del bot
+    const botResponseText = getBotResponse(text);
+
+    setTimeout(() => {
+      const botResponse: Message = {
+        id: messages.length + 2,
+        text: botResponseText,
+        sender: "bot",
+        timestamp: new Date(),
+      };
+
+      // 3. Añadir la respuesta del bot
+      setMessages((prev) => [...prev, botResponse]);
+    }, 1000); // Retraso de 1 segundo para simular que está "escribiendo"
   };
 
   return (
