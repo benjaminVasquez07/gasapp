@@ -11,40 +11,10 @@ interface Message {
   timestamp: Date;
 }
 
-
-
-// Función simple para generar la respuesta del bot
-const getBotResponse = (userText: string): string => {
-  const lowerText = userText.toLowerCase();
-
-  if (
-    lowerText.includes("hola") ||
-    lowerText.includes("buenas") ||
-    lowerText.includes("buenos dias")
-  ) {
-    return "¡Hola! Para ayudarte mejor y coordinar el servicio, ¿podrías decirme **qué tipo de servicio necesitas**? (Ej: Revisión de artefactos, instalación, prueba de hermeticidad).";
-  } else if (
-    lowerText.includes("revision") ||
-    lowerText.includes("instalacion") ||
-    lowerText.includes("artefacto")
-  ) {
-    return "¿En qué zona o barrio estás ubicado/a? Así te asignamos el gasista matriculado más cercano.";
-  } else if (
-    lowerText.includes("presupuesto") ||
-    lowerText.includes("cuanto")
-  ) {
-    return "Para darte un presupuesto aproximado, necesitamos saber la dirección exacta del trabajo y una breve descripción. ¿Me la podrías enviar?";
-  } else if (lowerText.includes("gracias")) {
-    return "¡De nada! Si tienes otra consulta, no dudes en escribir. En breve un gasista se pondrá en contacto contigo.";
-  }
-
-  // Respuesta por defecto si no coincide con nada
-  return "Gracias por tu mensaje. El gasista matriculado ha recibido tu consulta y te responderá personalmente a este chat en unos minutos para coordinar el servicio.";
-};
-
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Mensaje inicial del bot
@@ -63,41 +33,64 @@ export default function Chat() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Desplazarse al final cuando se añaden mensajes
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
-  const handleSendMessage = (e: React.FormEvent) => {
+  // ✅ AHORA USA LA IA REAL
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     const text = inputMessage.trim();
-    if (!text) return;
+    if (!text || loading) return;
 
     const userMessage: Message = {
       id: messages.length + 1,
-      text: text,
+      text,
       sender: "user",
       timestamp: new Date(),
     };
 
-    // 1. Añadir el mensaje del usuario
     setMessages((prev) => [...prev, userMessage]);
     setInputMessage("");
+    setLoading(true);
 
-    // 2. Generar y programar la respuesta del bot
-    const botResponseText = getBotResponse(text);
+    try {
+      const res = await fetch("/api/ia", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: text }),
+      });
 
-    setTimeout(() => {
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("ERROR IA:", errorText);
+        throw new Error("La IA no respondió correctamente");
+      }
+
+      const data = await res.json();
+
       const botResponse: Message = {
         id: messages.length + 2,
-        text: botResponseText,
+        text: data.reply,
         sender: "bot",
         timestamp: new Date(),
       };
 
-      // 3. Añadir la respuesta del bot
       setMessages((prev) => [...prev, botResponse]);
-    }, 1000); // Retraso de 1 segundo para simular que está "escribiendo"
+    } catch (error) {
+      const botError: Message = {
+        id: messages.length + 2,
+        text: "Error al conectar con la IA. Intentalo nuevamente.",
+        sender: "bot",
+        timestamp: new Date(),
+      };
+
+      setMessages((prev) => [...prev, botError]);
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -167,7 +160,7 @@ export default function Chat() {
                           : "bg-gray-200 text-gray-800"
                       }`}
                     >
-                      <p className="break-words">{message.text}</p>
+                      <p className="wrap-break-word">{message.text}</p>
                       <div
                         className={`text-xs mt-2 ${
                           message.sender === "user"
@@ -183,6 +176,9 @@ export default function Chat() {
                     </div>
                   </div>
                 ))}
+                {loading && (
+                  <p className="text-sm text-gray-500">La IA está escribiendo...</p>
+                )}
                 <div ref={messagesEndRef} />
               </div>
             </div>
@@ -201,7 +197,7 @@ export default function Chat() {
                 />
                 <button
                   type="submit"
-                  disabled={!inputMessage.trim()}
+                  disabled={!inputMessage.trim() || loading}
                   className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200"
                 >
                   Enviar
