@@ -11,6 +11,8 @@ interface Message {
   timestamp: Date;
 }
 
+
+
 // Función simple para generar la respuesta del bot
 const getBotResponse = (userText: string): string => {
   const lowerText = userText.toLowerCase();
