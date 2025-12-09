@@ -14,8 +14,9 @@
     "codegen": "npx playwright codegen"
   },
   "dependencies": {
+    "@openai/openai": "npm:@jsr/openai__openai@^6.10.0",
     "next": "16.0.3",
-    "openai": "^6.9.1",
+    "openai": "^6.10.0",
     "react": "19.2.0",
     "react-dom": "19.2.0"
   },
