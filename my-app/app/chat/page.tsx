@@ -69,17 +69,24 @@ export default function Chat() {
         throw new Error("La IA no respondió correctamente");
       }
 
+
       const data = await res.json();
+
+      console.log(data);
+      const respuesta = data.choices[0].message.content;
+
+      console.log(respuesta);
 
       const botResponse: Message = {
         id: messages.length + 2,
-        text: data.reply,
+        text: respuesta,
         sender: "bot",
         timestamp: new Date(),
       };
 
       setMessages((prev) => [...prev, botResponse]);
     } catch (error) {
+      console.log('error: ' + error);
       const botError: Message = {
         id: messages.length + 2,
         text: "Error al conectar con la IA. Intentalo nuevamente.",
