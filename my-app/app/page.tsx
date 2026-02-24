@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
+import Resenas from "./components/Resenas";
 
 export default function Home() {
   const [copied, setCopied] = useState(false);
@@ -125,7 +126,8 @@ export default function Home() {
             </div>
           </div>
         </section>
-
+        <Resenas />
+        
         {/* Footer */}
         <footer className="bg-gray-800 text-white py-8">
           <div className="container mx-auto px-4 text-center">
