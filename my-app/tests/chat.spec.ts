@@ -1,7 +1,8 @@
 import { test, expect } from "@playwright/test";
+
 test.describe("Cotizacion automatica - UI", () => {
   test("chat_basico", async ({ page }) => {
-    await page.goto("http://localhost:3000/");
+    await page.goto("http://localhost:4000/");
     await page
       .getByRole("button", { name: "Solicitar Cotización Instantá" })
       .click();
