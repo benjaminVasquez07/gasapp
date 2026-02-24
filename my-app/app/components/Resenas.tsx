@@ -1,18 +1,31 @@
 "use client";
-import { Black_And_White_Picture } from "next/font/google";
 import { useEffect, useState } from "react";
 
 export default function Resenas() {
   const [resenas, setResenas] = useState([]);
 
   useEffect(() => {
-    fetch("/reseñas.json")
-      .then(res => res.json())
-      .then(data => setResenas(data));
+    fetch("/resenas.csv")
+      .then(res => res.text())
+      .then(text => {
+        const filas = text.trim().split("\n");
+
+        const datos = filas.slice(1).map(fila => {
+          const [nombre, calificacion, comentario] = fila.split(",");
+
+          return {
+            nombre,
+            calificacion: Number(calificacion),
+            comentario,
+          };
+        });
+
+        setResenas(datos);
+      });
   }, []);
 
   const promedio =
-    resenas.reduce((acc, r) => acc + Number(r.calificacion), 0) /
+    resenas.reduce((acc, r) => acc + r.calificacion, 0) /
     (resenas.length || 1);
 
   return (
@@ -43,10 +56,8 @@ export default function Resenas() {
               boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
             }}
           >
-            <h4>{r["nombre y apellido"]}</h4>
-
-            <p>{"⭐".repeat(Number(r.calificacion))}</p>
-
+            <h4>{r.nombre}</h4>
+            <p>{"⭐".repeat(r.calificacion)}</p>
             <p>{r.comentario}</p>
           </div>
         ))}
