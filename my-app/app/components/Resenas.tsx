@@ -5,23 +5,9 @@ export default function Resenas() {
   const [resenas, setResenas] = useState([]);
 
   useEffect(() => {
-    fetch("/resenas.csv")
-      .then(res => res.text())
-      .then(text => {
-        const filas = text.trim().split("\n");
-
-        const datos = filas.slice(1).map(fila => {
-          const [nombre, calificacion, comentario] = fila.split(",");
-
-          return {
-            nombre,
-            calificacion: Number(calificacion),
-            comentario,
-          };
-        });
-
-        setResenas(datos);
-      });
+    fetch("/api/resenas")
+      .then((res) => res.json())
+      .then((data) => setResenas(data));
   }, []);
 
   const promedio =
