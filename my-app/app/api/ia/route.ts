@@ -14,8 +14,9 @@ export async function POST(req: Request) {
             content: "Sos un gasista matriculado con experiencia, responde de forma breve y simple"},
           { role: "user", content: message }
         ],
-        model: "gpt-4.1-mini",
-        provider: "OIVSCodeSer0501",
+/*        model: "gpt-4.1-mini",*/
+        /*provider: "OIVSCodeSer0501",*/
+        provider: "PollinationsAI",
     })}
   );
 
