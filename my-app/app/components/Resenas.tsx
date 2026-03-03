@@ -1,8 +1,16 @@
 "use client";
 import { useEffect, useState } from "react";
 
+// 1. Definimos la estructura de una reseña
+interface Resena {
+  nombre: string;
+  calificacion: number;
+  comentario: string;
+}
+
 export default function Resenas() {
-  const [resenas, setResenas] = useState([]);
+  // 2. Le decimos a useState que usará un arreglo de ese tipo
+  const [resenas, setResenas] = useState<Resena[]>([]);
 
   useEffect(() => {
     fetch("/api/resenas")
@@ -10,6 +18,7 @@ export default function Resenas() {
       .then((data) => setResenas(data));
   }, []);
 
+  // Ahora TypeScript sabe que 'r' tiene la propiedad 'calificacion'
   const promedio =
     resenas.reduce((acc, r) => acc + r.calificacion, 0) /
     (resenas.length || 1);
