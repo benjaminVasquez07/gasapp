@@ -97,12 +97,6 @@ export default function Home() {
                   Solicitar Cotización Instantánea
                 </button>
               </Link>
-              
-              <Link href="/cotizacion">
-              <button className="bg-black hover:bg-gray-800 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-colors duration-200 w-full sm:w-auto">
-                Ir al Switch de Conexión
-              </button>
-              </Link>
 
             </div>
           </div>
@@ -139,7 +133,7 @@ export default function Home() {
         <footer className="bg-gray-800 text-white py-8">
           <div className="container mx-auto px-4 text-center">
             <p>
-              &copy; 2024 GasApp - Servicio Profesional de Gasista Matriculado.
+              &copy; 2025 GasApp - Servicio Profesional de Gasista Matriculado.
               Todos los derechos reservados.
             </p>
           </div>
