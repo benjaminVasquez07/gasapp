@@ -117,7 +117,7 @@ export default function Home() {
           <div className="container mx-auto px-6">
             <div className="max-w-xl mx-auto text-center mb-20">
               <h3 className="text-sm font-mono tracking-widest text-blue-500 uppercase">
-                Arquitectura del Servicio
+                 Gasista Profesional Matriculado
               </h3>
               <p className="text-3xl font-bold text-white mt-3">Procesamiento de Solicitudes</p>
             </div>
