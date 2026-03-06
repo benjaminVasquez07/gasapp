@@ -36,7 +36,7 @@ export default function Resenas() {
           <div className="flex flex-col items-center justify-center space-y-2">
              <p className="text-5xl md:text-6xl font-black text-white tracking-tighter">
               {promedio.toFixed(1)}
-              <span className="text-blue-500 text-3xl ml-2">clasificacion</span>
+              <span className="text-blue-500 text-3xl ml-2">clasificación</span>
             </p>
             <div className="flex space-x-1 text-cyan-400">
                {"★".repeat(Math.round(promedio))}
